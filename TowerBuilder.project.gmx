@@ -4,21 +4,38 @@
     <Config>Configs\Default</Config>
   </Configs>
   <NewExtensions/>
-  <sounds name="sound"/>
+  <sounds name="sound">
+    <sound>sound\snd_bk_funtime</sound>
+    <sound>sound\snd_bk_planet_earth</sound>
+    <sound>sound\snd_bk_whole_moose</sound>
+    <sound>sound\snd_bk_upbeat_feeling</sound>
+  </sounds>
   <sprites name="sprites">
     <sprite>sprites\spr_anchor</sprite>
     <sprite>sprites\spr_central_anchor</sprite>
     <sprite>sprites\spr_ground_placeholder</sprite>
+    <sprite>sprites\spr_happybird</sprite>
   </sprites>
   <backgrounds name="background">
     <background>background\background0</background>
+    <background>background\some_back</background>
+    <background>background\background2</background>
   </backgrounds>
   <paths name="paths"/>
   <scripts name="scripts">
     <script>scripts\clear_app_bar.gml</script>
     <script>scripts\delete_selected_anchor.gml</script>
     <script>scripts\create_debris.gml</script>
+    <script>scripts\show_materials_menu.gml</script>
   </scripts>
+  <fonts name="fonts">
+    <font>fonts\f_display_lg</font>
+    <font>fonts\f_display_md</font>
+    <font>fonts\f_display_md_bk</font>
+    <font>fonts\f_display_md_fr</font>
+    <font>fonts\f_display_sm</font>
+    <font>fonts\f_hud</font>
+  </fonts>
   <objects name="objects">
     <objects name="Physics Objects">
       <object>objects\o_physics_object</object>
@@ -37,14 +54,21 @@
           <object>objects\o_connection</object>
         </objects>
       </objects>
+      <object>objects\o_happybird</object>
     </objects>
     <object>objects\o_controller</object>
-    <object>objects\o_mouse_hint</object>
+    <objects name="Game Start">
+      <object>objects\o_game_start_controller</object>
+    </objects>
   </objects>
   <rooms name="rooms">
-    <room>rooms\room0</room>
+    <room>rooms\rm_start</room>
+    <room>rooms\rm_game_level_1</room>
   </rooms>
-  <constants number="14">
+  <constants number="18">
+    <constant name="GAME_NAME">"Tower Builder"</constant>
+    <constant name="STATE_TEST_MODE">"TestMode"</constant>
+    <constant name="STATE_EDIT_MODE">"EditMode"</constant>
     <constant name="ELT_IRON">3</constant>
     <constant name="ELT_WOOD">4</constant>
     <constant name="ELT_STEEL">5</constant>
@@ -56,7 +80,8 @@
     <constant name="PROP_DENSITY">4</constant>
     <constant name="PROP_DAMPING">5</constant>
     <constant name="PROP_HEALTH">6</constant>
-    <constant name="PROP_NAME">7</constant>
+    <constant name="PROP_HINGE_ELASTICITY">7</constant>
+    <constant name="PROP_NAME">8</constant>
     <constant name="ANCHOR_FIXED">1</constant>
     <constant name="ANCHOR_MOBILE">2</constant>
   </constants>

@@ -46,13 +46,29 @@ initial_y = y;
 active_material = ELT_IRON;
 budget = 1000000;
 
-// APP BAR ICONS
-appbar[0] = -1;
-appbar[1] = -1;
-appbar[2] = -1;
-appbar[3] = -1;
-appbar[4] = -1;
-n_appbar = 5;
+STATE = STATE_EDIT_MODE;
+DEBUG = false;
+</string>
+          </argument>
+        </arguments>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Properties and Constants
 
 // DEFINING PROPERTIES
 properties[ELT_IRON, PROP_COST] = 19.8;
@@ -61,6 +77,7 @@ properties[ELT_IRON, PROP_MATERIAL_STRENGTH] = 4;
 properties[ELT_IRON, PROP_DENSITY] = 100;
 properties[ELT_IRON, PROP_DAMPING] = 1.5;
 properties[ELT_IRON, PROP_HEALTH] = 0;
+properties[ELT_IRON, PROP_HINGE_ELASTICITY] = 5;
 properties[ELT_IRON, PROP_NAME] = "Iron";
 
 properties[ELT_WOOD, PROP_COST] = 6.82;
@@ -69,6 +86,7 @@ properties[ELT_WOOD, PROP_MATERIAL_STRENGTH] = 0.5;
 properties[ELT_WOOD, PROP_DENSITY] = 8.1;
 properties[ELT_WOOD, PROP_DAMPING] = 0.2;
 properties[ELT_WOOD, PROP_HEALTH] = 0;
+properties[ELT_WOOD, PROP_HINGE_ELASTICITY] = 5;
 properties[ELT_WOOD, PROP_NAME] = "Wood";
 
 properties[ELT_STEEL, PROP_COST] = 25.67;
@@ -77,6 +95,7 @@ properties[ELT_STEEL, PROP_MATERIAL_STRENGTH] = 7;
 properties[ELT_STEEL, PROP_DENSITY] = 98;
 properties[ELT_STEEL, PROP_DAMPING] = 2;
 properties[ELT_STEEL, PROP_HEALTH] = 3;
+properties[ELT_STEEL, PROP_HINGE_ELASTICITY] = 8;
 properties[ELT_STEEL, PROP_NAME] = "Steel";
 
 properties[ELT_ALUMINIUM, PROP_COST] = 54.2;
@@ -85,6 +104,7 @@ properties[ELT_ALUMINIUM, PROP_MATERIAL_STRENGTH] = 10;
 properties[ELT_ALUMINIUM, PROP_DENSITY] = 34;
 properties[ELT_ALUMINIUM, PROP_DAMPING] = 2;
 properties[ELT_ALUMINIUM, PROP_HEALTH] = 4;
+properties[ELT_ALUMINIUM, PROP_HINGE_ELASTICITY] = 10;
 properties[ELT_ALUMINIUM, PROP_NAME] = "Aluminium";
 
 properties[ELT_TITANIUM, PROP_COST] = 88.39;
@@ -93,8 +113,8 @@ properties[ELT_TITANIUM, PROP_MATERIAL_STRENGTH] = 25;
 properties[ELT_TITANIUM, PROP_DENSITY] = 57;
 properties[ELT_TITANIUM, PROP_DAMPING] = 3;
 properties[ELT_TITANIUM, PROP_HEALTH] = 6;
+properties[ELT_TITANIUM, PROP_HINGE_ELASTICITY] = 12;
 properties[ELT_TITANIUM, PROP_NAME] = "Titanium";
-
 
 </string>
           </argument>
@@ -117,8 +137,18 @@ properties[ELT_TITANIUM, PROP_NAME] = "Titanium";
           <argument>
             <kind>1</kind>
             <string>/// App bar
+
+// APP BAR ICONS
+appbar[0] = -1;
+appbar[1] = -1;
+appbar[2] = -1;
+appbar[3] = -1;
+appbar[4] = -1;
+n_appbar = 5;
+
 if (os_type == os_win8native) {
   win8_appbar_enable(true);
+  //appbar[0] = win8_appbar_add_element("button", "allapps", "Material", "global", "Change the current building material", show_materials_menu);
 }
 </string>
           </argument>
@@ -185,23 +215,27 @@ if (active_hover == noone) {
           <argument>
             <kind>1</kind>
             <string>/// App bar
-if (os_type == os_win8native)
-if (selected_anchor != prev_selected_anchor) {
+if (os_type == os_win8native) {
+  if (selected_anchor != prev_selected_anchor) {
 
-  if (selected_anchor == noone) {
-    clear_app_bar();    
-  } else {
-    if (prev_selected_anchor != noone) {
-      clear_app_bar();
+    if (selected_anchor == noone) {
+      clear_app_bar();    
+    } else {
+      if (prev_selected_anchor != noone) {
+        clear_app_bar();
+      }
+
+      // Add actions
+      if (selected_anchor.type == ANCHOR_MOBILE) { // only mobile anchors can be deleted
+        appbar[1] = win8_appbar_add_element("button", "delete", "Delete Anchor", "selection", "Delete the selected anchor element", delete_selected_anchor);
+      }
+
     }
-    
-    // Add actions
-    if (selected_anchor.type == ANCHOR_MOBILE) { // only mobile anchors can be deleted
-      appbar[0] = win8_appbar_add_element("button", "delete", "Delete Anchor", "selection", "Delete the selected anchor element", delete_selected_anchor);
-    }
-    
+
+    //appbar[0] = win8_appbar_add_element("button", "allapps", "Material", "global", "Change the current building material", show_materials_menu);
+
   }
-
+  
 }
 </string>
           </argument>
@@ -277,15 +311,18 @@ if (mouse_check_button_released(mb_any)) {
 
 if (keyboard_check(ord('W'))) {
   with ( o_connection ) {
-    phy_speed_x += 0.15;
-    //physics_apply_force(x, y, 2  + 100 * lengthdir_y(length, phy_rotation), 0);
+    phy_speed_x += 0.03;
   }
 }
 
 if (keyboard_check_released(ord('E'))) {
   with ( o_ground ) {
-    physics_apply_impulse(x-500 + random(1000), y, 2, -1400000);
+    physics_apply_impulse(x-500 + random(1000), y, 2, -400000);
   }
+}
+
+if (keyboard_check_released(ord('B'))) {
+  instance_create(mouse_x, mouse_y, o_happybird);
 }
 
 if (keyboard_check_released(ord('1'))) {
@@ -341,6 +378,9 @@ if (keyboard_check_released(ord('5'))) {
   if (secondary_hover == noone ) {
     x2 = round ( mouse_x / 32 ) * 32;
     y2 = round ( mouse_y / 32 ) * 32;
+    
+    i = instance_nearest(x2, y2, o_anchor);
+    
   } else {
     x2 = secondary_hover.x;
     y2 = secondary_hover.y;
@@ -378,6 +418,7 @@ if (keyboard_check_released(ord('5'))) {
     obj.hinge_strength = properties[active_material, PROP_HINGE_STRENGTH];
     obj.material_strength = properties[active_material, PROP_MATERIAL_STRENGTH];
     obj.hp = properties[active_material, PROP_HEALTH];
+    obj.max_displacement = properties[active_material, PROP_HINGE_ELASTICITY];
 
     budget -= properties[active_material, PROP_COST] * obj.length;
   }
@@ -442,7 +483,10 @@ pressed = true;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>draw_text(10, 10, "Current material: " + properties[active_material, PROP_NAME]);
+            <string>draw_set_halign(fa_left);
+draw_set_font(f_hud);
+
+draw_text(10, 10, "Current material: " + properties[active_material, PROP_NAME]);
 draw_text(10, 35, "Remaining budget: " + string(budget));
 
 </string>

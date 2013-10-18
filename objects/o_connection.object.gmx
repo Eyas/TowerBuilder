@@ -42,6 +42,7 @@ damping = 1;
 hinge_strength = 7;
 material_strength = 4;
 hp = 0;
+max_joint_displacement = 5;
 damaged = false;
 
 start_joint = -1;
@@ -290,7 +291,7 @@ if (start_force &gt; 8 || end_force &gt; 8) {
 
 if (start_joint &amp;&amp; start_connector) {
   start_displacement = point_distance(start_connect.x, start_connect.y, anchor_with.x, anchor_with.y);
-  if (start_displacement &gt; 5) {
+  if (start_displacement &gt; max_joint_displacement) {
     with(start_connect) {
       instance_destroy();
     }
@@ -365,11 +366,13 @@ draw_line_width(
     y + lengthdir_y(length/2, phy_rotation + 180),
     5);
 
-draw_text( x + 16, y, "(" +
-    string(start_force) +
-    ")#(" +
-    string(end_force) +
-    ")" );
+if (o_controller.DEBUG) {
+    draw_text( x + 16, y, "(" +
+        string(start_force) +
+        ")#(" +
+        string(end_force) +
+        ")" );
+    }
 }
 
 </string>
