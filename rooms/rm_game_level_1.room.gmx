@@ -63,7 +63,6 @@
     <instance objName="o_fixed_anchor" x="1792" y="2176" name="inst_376DB02C" locked="0" code="" scaleX="1" scaleY="1" colour="4294967295" rotation="0"/>
     <instance objName="o_fixed_anchor" x="640" y="2176" name="inst_67852335" locked="0" code="" scaleX="1" scaleY="1" colour="4294967295" rotation="0"/>
     <instance objName="o_fixed_anchor" x="512" y="2176" name="inst_6796BB56" locked="0" code="" scaleX="1" scaleY="1" colour="4294967295" rotation="0"/>
-    <instance objName="&lt;undefined&gt;" x="1024" y="992" name="inst_6A92396C" locked="0" code="" scaleX="1" scaleY="1" colour="4294967295" rotation="0"/>
   </instances>
   <tiles/>
   <PhysicsWorld>-1</PhysicsWorld>

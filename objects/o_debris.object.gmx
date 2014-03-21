@@ -165,8 +165,8 @@ if (alarm[0] &gt; room_speed * 1.5) alarm[0] = room_speed * 1.5;
             <kind>1</kind>
             <string>
 for(i = 0; i &lt; sides; i++) {
-  r1 = sides[i];
-  r2 = sides[ (i + 1) % sides ];
+  r1 = side[i];
+  r2 = side[ (i + 1) % sides ];
   a1 = phy_rotation + angle_between * i;
   a2 = phy_rotation + angle_between * ((i + 1) % sides);
   draw_set_alpha(alpha);
