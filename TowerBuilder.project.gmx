@@ -9,6 +9,20 @@
     <sound>sound\snd_bk_planet_earth</sound>
     <sound>sound\snd_bk_whole_moose</sound>
     <sound>sound\snd_bk_upbeat_feeling</sound>
+    <sounds name="Effects">
+      <sound>sound\slide_metal</sound>
+      <sound>sound\slide_rock</sound>
+      <sound>sound\tap_crisp</sound>
+      <sound>sound\tap_fuzzy</sound>
+      <sound>sound\tap_metallic</sound>
+      <sound>sound\tap_muted</sound>
+      <sound>sound\tap_percussive</sound>
+      <sound>sound\tap_professional</sound>
+      <sound>sound\tap_resonant</sound>
+      <sound>sound\tap_scratchy</sound>
+      <sound>sound\tap_warm</sound>
+      <sound>sound\tap_wooden</sound>
+    </sounds>
   </sounds>
   <sprites name="sprites">
     <sprite>sprites\spr_anchor</sprite>
