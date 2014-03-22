@@ -25,7 +25,13 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>menu_count = 3;
+            <string>var i;
+
+menu_count = 2;
+
+if (os_type == os_win32) {
+    menu_count = 3;
+}
 
 menu_hovered = noone;
 menu_pressed = noone;
@@ -34,11 +40,81 @@ menu_item[0] = "Story Mode";
 menu_item[1] = "Builder Mode";
 menu_item[2] = "Exit";
 
+menu_item_height = (room_height * 0.3 / menu_count);
+
 for (i = 0; i &lt; menu_count; i++) {
 
 draw_x[i] = room_width/2;
-draw_y[i] = room_height * 0.4 + i * (room_height * 0.3 / menu_count);
+draw_y[i] = room_height * 0.4 + i * menu_item_height;
 
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="6" enumb="56">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>var i;
+
+if (mouse_x &gt; room_width * 0.2 &amp;&amp; mouse_x &lt; room_width * 0.8) {
+    menu_pressed = -1;
+    for (i = 0; i &lt; menu_count; i++) {
+        if (abs(draw_y[i] - mouse_y) &lt; menu_item_height * 0.9) {
+            menu_pressed = i;
+            break;
+        }
+    }
+    event_perform(ev_other, ev_user1);
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="6" enumb="53">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>var i;
+
+if (mouse_x &gt; room_width * 0.2 &amp;&amp; mouse_x &lt; room_width * 0.8) {
+    menu_hovered = -1;
+    for (i = 0; i &lt; menu_count; i++) {
+        if (abs(draw_y[i] - mouse_y) &lt; menu_item_height * 0.9) {
+            menu_hovered = i;
+            break;
+        }
+    }
+    event_perform(ev_other, ev_user0);
 }
 </string>
           </argument>
@@ -66,7 +142,7 @@ draw_y[i] = room_height * 0.4 + i * (room_height * 0.3 / menu_count);
 switch(menu_pressed) {
 case 0: break;
 case 1: room_goto(rm_game_level_1); break;
-
+case 2: if (os_type == os_win32) game_end() ; break;
 }
 </string>
           </argument>
@@ -160,7 +236,8 @@ audio_play_music(snd_bk_planet_earth, true);
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>
+            <string>var i;
+
 draw_set_color(c_white);
 draw_set_font(f_display_lg);
 draw_set_halign(fa_center);
