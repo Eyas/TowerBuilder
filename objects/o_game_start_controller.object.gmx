@@ -213,7 +213,7 @@ menu_pressed = menu_hovered;
           <argument>
             <kind>1</kind>
             <string>audio_stop_all();
-audio_play_music(snd_bk_planet_earth, true);
+audio_play_sound(snd_bk_planet_earth, 0, true);
 </string>
           </argument>
         </arguments>
