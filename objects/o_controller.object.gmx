@@ -35,6 +35,8 @@ pressed = false;
 prev_selected_anchor = noone;
 selected_anchor_to_remove = noone;
 
+can_build = true;
+
 draw_grid = true;
 
 x = 1366;
@@ -350,6 +352,42 @@ if (keyboard_check_released(ord('5'))) {
           </argument>
         </arguments>
       </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Logic to decide selection and line drawing
+if (mouse_check_button(mb_left)) {
+
+  if (active_hover != noone) {
+    var x1, y1, x2, y2, length, cost;
+    x1 = press_loc_x;
+    y1 = press_loc_y;
+    x2 = round(mouse_x / 32) * 32;
+    y2 = round(mouse_y / 32) * 32;
+
+    length = point_distance(x1, y1, x2, y2);
+    cost = properties[active_material, PROP_COST] * length;
+    
+    can_build = cost &lt; budget;
+  }
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
     </event>
     <event eventtype="6" enumb="56">
       <action>
@@ -368,7 +406,9 @@ if (keyboard_check_released(ord('5'))) {
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>if (active_hover != noone) {
+            <string>var length, cost;
+
+if (active_hover != noone) {
 
   can_create = true;
   
@@ -399,13 +439,18 @@ if (keyboard_check_released(ord('5'))) {
   }
   
   if (round(x1) == round(x2) &amp;&amp; round(y1) == round(y2)) can_create = false;
+  
+  length = point_distance(x1, y1, x2, y2);
+  cost = properties[active_material, PROP_COST] * length;
+  
+  if (cost &gt; budget) can_create = false;
 
-  if (can_create) {
+  if (can_create) {    
     x_loc = (x1 + x2) / 2;
     y_loc = (y1 + y2) / 2;
     
     obj = instance_create(x_loc, y_loc, o_connection);
-    obj.length = point_distance(x1, y1, x2, y2);
+    obj.length = length;
     obj.initial_angle = point_direction(x1, y2, x2, y1);
     obj.anchor_with = active_hover;
     obj.anchor_at_x = x1;
@@ -420,7 +465,7 @@ if (keyboard_check_released(ord('5'))) {
     obj.hp = properties[active_material, PROP_HEALTH];
     obj.max_displacement = properties[active_material, PROP_HINGE_ELASTICITY];
 
-    budget -= properties[active_material, PROP_COST] * obj.length;
+    budget -= cost;
   }
 }
 
@@ -567,7 +612,9 @@ pressed = true;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>draw_set_halign(fa_left);
+            <string>/// Draw the HUD
+
+draw_set_halign(fa_left);
 draw_set_font(f_hud);
 
 draw_set_color(c_dkgray);
@@ -609,8 +656,10 @@ draw_text(30 + 20, 50, "Current material: " + properties[active_material, PROP_N
             <string>if (mouse_check_button(mb_left)) {
   
   if (active_hover != noone) {
+    var color;
+    if (can_build) color = c_black; else color = c_red;
     draw_set_alpha(0.5);
-    draw_set_color(c_black);
+    draw_set_color(color);
     draw_line_width(press_loc_x, press_loc_y, round(mouse_x/32)*32, round(mouse_y/32)*32, 4);
     draw_set_alpha(1);
     draw_circle(active_hover.x, active_hover.y, 12, true);
@@ -673,10 +722,10 @@ for (i = 0; i &lt; n_cols; i++) {
 
   if (i % 4 == 0) {
     draw_set_alpha(0.5);
-    draw_line_width(32 * i, 0, 32*i, h, 5);
+    draw_line_width(32 * i, 0, 32 * i, h, 5);
     draw_set_alpha(0.3);
   } else {
-    draw_line_width(32 * i, 0, 32*i, h, 3);
+    draw_line_width(32 * i, 0, 32 * i, h, 3);
   }
 }
 

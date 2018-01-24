@@ -123,11 +123,9 @@ angular = 1;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>/// Delete OR trigger selected (win8)
+            <string>/// Delete
 event_inherited();
-
-if (os_type != os_win8native)
-  delete_selected_anchor();
+delete_selected_anchor();
 </string>
           </argument>
         </arguments>
